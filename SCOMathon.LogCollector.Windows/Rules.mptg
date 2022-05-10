@@ -1,0 +1,64 @@
+<TemplateGroup>
+  <Instances>
+    <Instance ID="Instancead122e8e2c2b461a804a5ac5069aa36f" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomRule" Version="1.0.0.0">
+      <CustomRuleConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <Id>CollectEvents.Rule</Id>
+        <DisplayName>Collect Windows Event Logs</DisplayName>
+        <Description>Collect events from specified Windows Event Logs.</Description>
+        <Category>EventCollection</Category>
+        <ConfirmDelivery>true</ConfirmDelivery>
+        <Target>Windows!Microsoft.Windows.OperatingSystem</Target>
+        <Enabled>true</Enabled>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <DiscardLevel>100</DiscardLevel>
+        <DataSources>
+          <RuleDataSourceItem>
+            <DataSourceId>DS_CollectEvents</DataSourceId>
+            <DataSourceConfig>&lt;IntervalSeconds&gt;240&lt;/IntervalSeconds&gt;&lt;SyncTime /&gt;&lt;LogsToShip&gt;Security,Application&lt;/LogsToShip&gt;&lt;ComputerName&gt;$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$&lt;/ComputerName&gt;</DataSourceConfig>
+            <DataSourceType>SCOMathon.LogCollector.Windows.CollectEvents.DataSource</DataSourceType>
+          </RuleDataSourceItem>
+        </DataSources>
+        <ConditionDetectionConfig>&lt;Expression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;XPathQuery Type="String"&gt;Property[@Name='DataGenerated']&lt;/XPathQuery&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;Equal&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value Type="String"&gt;OK&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/Expression&gt;</ConditionDetectionConfig>
+        <ConditionDetectionId>CD_AreEventsCollected</ConditionDetectionId>
+        <ConditionDetectionType>System!System.ExpressionFilter</ConditionDetectionType>
+        <WriteActions>
+          <RuleWriteActionItem>
+            <WriteActionId>WA_UploadEvents</WriteActionId>
+            <WriteActionConfig>&lt;DestinationManagedTypeId&gt;$MPElement[Name='SC!Microsoft.SystemCenter.CollectionManagementServer']$&lt;/DestinationManagedTypeId&gt;&lt;UploadChannelId&gt;F4AF831B-0203-4D1D-9DC1-410B1E208747&lt;/UploadChannelId&gt;&lt;SourceFilePath&gt;$Data/Property[@Name='ResultPath']$&lt;/SourceFilePath&gt;</WriteActionConfig>
+            <WriteActionType>System!System.FileUploadWriteAction</WriteActionType>
+          </RuleWriteActionItem>
+        </WriteActions>
+      </CustomRuleConfig>
+    </Instance>
+    <Instance ID="Instancecca66cee81884567a1b3b2ee93d85a9c" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomRule" Version="1.0.0.0">
+      <CustomRuleConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <Id>ReceiveEvents.Rule</Id>
+        <DisplayName>Receive Windows Event Logs</DisplayName>
+        <Description>Description for the new rule</Description>
+        <Category>None</Category>
+        <ConfirmDelivery>true</ConfirmDelivery>
+        <Target>SC!Microsoft.SystemCenter.CollectionManagementServer</Target>
+        <Enabled>true</Enabled>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <DiscardLevel>100</DiscardLevel>
+        <DataSources>
+          <RuleDataSourceItem>
+            <DataSourceId>DS_UploadFile</DataSourceId>
+            <DataSourceConfig>&lt;UploadChannelId&gt;F4AF831B-0203-4D1D-9DC1-410B1E208747&lt;/UploadChannelId&gt;</DataSourceConfig>
+            <DataSourceType>System!System.FileUploadDataSource</DataSourceType>
+          </RuleDataSourceItem>
+        </DataSources>
+        <ConditionDetectionId>CD</ConditionDetectionId>
+        <WriteActions>
+          <RuleWriteActionItem>
+            <WriteActionId>WA_SaveFiles</WriteActionId>
+            <WriteActionConfig>&lt;DestinationPath&gt;C:\Temp\ShippedLogs&lt;/DestinationPath&gt;</WriteActionConfig>
+            <WriteActionType>SCOMathon.LogCollector.Windows.ReceiveEvents.WriteAction</WriteActionType>
+          </RuleWriteActionItem>
+        </WriteActions>
+      </CustomRuleConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>

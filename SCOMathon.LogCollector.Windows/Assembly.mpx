@@ -1,0 +1,7 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Resources>
+    <DeployableAssembly ID="SCOMathon.LogCollector.Windows.Modules" Accessibility="Internal"
+                        FileName="SCOMathon.LogCollector.Windows.Modules.dll" HasNullStream="false"
+                        QualifiedName="SCOMathon.LogCollector.Windows.Modules, Version=1.0.0.2, Culture=neutral, PublicKeyToken=52fc4999228d34f7" />
+  </Resources>
+</ManagementPackFragment>

@@ -1,0 +1,75 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <ModuleTypes>
+
+      <DataSourceModuleType ID="SCOMathon.LogCollector.Windows.CollectEvents.DataSource" Accessibility="Internal">
+        <Configuration>
+          <xsd:element minOccurs="1" name="IntervalSeconds" type="xsd:integer" />
+          <xsd:element minOccurs="0" name="SyncTime" type="xsd:string" />
+          <xsd:element minOccurs="1" name="LogsToShip" type="xsd:string" />
+          <xsd:element minOccurs="1" name="ComputerName" type="xsd:string" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="LogsToShip" Selector="$Config/LogsToShip$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <DataSource ID="DS_Scheduller" TypeID="System!System.SimpleScheduler">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+              </DataSource>
+              <ProbeAction ID="PA_RedLogs" TypeID="SCOMathon.LogCollector.Windows.CollectEvents.ProbeAction">
+                <LogsToShip>$Config/LogsToShip$</LogsToShip>
+                <ComputerName>$Config/ComputerName$</ComputerName>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PA_RedLogs">
+                <Node ID="DS_Scheduller" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+      
+      <ProbeActionModuleType ID="SCOMathon.LogCollector.Windows.CollectEvents.ProbeAction" Accessibility="Internal">
+        <Configuration>
+          <xsd:element minOccurs="1" name="LogsToShip" type="xsd:string" />
+          <xsd:element name="ComputerName" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="LogsToShip" Selector="$Config/LogsToShip$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Managed>
+            <Assembly>SCOMathon.LogCollector.Windows.Modules</Assembly>
+            <Type>SCOMathon.LogCollector.Windows.Modules.CollectEvents</Type>
+          </Managed>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+        <InputType>System!System.BaseData</InputType>
+      </ProbeActionModuleType>
+      
+      <WriteActionModuleType ID="SCOMathon.LogCollector.Windows.ReceiveEvents.WriteAction" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" name="DestinationPath" type="xsd:string" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="DestinationPath" Selector="$Config/DestinationPath$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Managed>
+            <Assembly>SCOMathon.LogCollector.Windows.Modules</Assembly>
+            <Type>SCOMathon.LogCollector.Windows.Modules.ReceiveEvents</Type>
+          </Managed>
+        </ModuleImplementation>
+        <InputType>System!System.CompletedFileUpload</InputType>
+      </WriteActionModuleType>
+      
+    </ModuleTypes>
+  </TypeDefinitions>
+</ManagementPackFragment>
